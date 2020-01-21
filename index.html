@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Convertisseur Hexa/Decimal</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <br><h2>Convertisseur Hexadécimal - Decimal</h2><br>
+    <div class="card-body">
+        <form action="">
+            <p><label for="hexadecimal" class="col-sm-3">Hexadécimal : </label> <input type="text" id="hexadecimal" name="hexadecimal" class="col-sm-3">
+            <input type="button" name="submit1" value="&rarr;" onClick="convhexadecimal();"></p>
+
+            <p><label for="decimal" class="col-sm-3">Décimal : </label> <input type="number" id="decimal" name="decimal" class="col-sm-3">
+            <input type="button" name="submit2" value="&rarr;" onClick="convdecimal();"></p>
+        </form>
+    </div>
+    <div id="fact" class="card-body">
+        <h4 class="card-title">
+            Anecdote :
+        </h4>
+        <p id="factText" class="card-text"></p>
+    </div>
+    
+<script>
+function convdecimal(){
+    decimal = document.getElementById("decimal");
+    hexadecimal = document.getElementById("hexadecimal");
+    hexadecimal.value = (decimal.value-0).toString(16);
+}
+
+function convhexadecimal(){
+    decimal = document.getElementById("decimal");
+    hexadecimal = document.getElementById("hexadecimal");
+    decimal.value = parseInt(hexadecimal.value,16);
+}
+
+let fact = document.querySelector('#fact');
+let factText = document.querySelector('#factText');
+let numberInput = document.querySelector('#decimal');
+numberInput.addEventListener('input', getFactAjax);
+
+function getFactAjax(e){
+    e.preventDefault();
+    let number = e.target.value;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://numbersapi.com/' + number);
+
+    xhr.onload = function(){
+        if (this.status == 200 && number != ''){
+            fact.style.display = 'block';
+            fact.innerHTML = this.responseText;
+        }
+        if (number == ''){
+            fact.style.display = 'none';
+        }
+    }
+    xhr.send();
+}
+
+function getFactFetch(){
+    let number = numberInput.value;
+    fetch('http://numbersapi.com/' + number)
+        .then(response => response.text())
+        .then(data =>{
+            if (data && number != '') {
+                fact.style.display = 'block';
+                fact.innerHTML = data;
+            }
+            number ? true : fact.style.display = 'none';
+        })
+        .catch(err => console.log(err));
+}
+
+</script>
+</body>
+</html>
